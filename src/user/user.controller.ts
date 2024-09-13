@@ -8,16 +8,18 @@ import {
   Delete,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { CreateUserDto } from './dto/create-user.dto';
+import { CreateUser } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { GenericResponse } from '../shared/types';
 
 @Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post()
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.userService.create(createUserDto);
+  async create(@Body() body: CreateUser): Promise<GenericResponse> {
+    await this.userService.createUser(body);
+    return new GenericResponse('Please check your email');
   }
 
   @Get()
