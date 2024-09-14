@@ -3,6 +3,7 @@ import { UserModule } from './user/user.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './user/user.entity';
 import { EmailModule } from './email/email.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
@@ -11,6 +12,10 @@ import { EmailModule } from './email/email.module';
       database: './app-db.sqlite',
       synchronize: false,
       entities: [User],
+    }),
+    ConfigModule.forRoot({
+      envFilePath: process.env.NODE_ENV === 'development' ? '.dev.env' : '.env',
+      isGlobal: true,
     }),
 
     UserModule,
