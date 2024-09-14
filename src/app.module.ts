@@ -14,6 +14,9 @@ import { AuthModule } from './auth/auth.module';
 import { ArticleModule } from './article/article.module';
 import { ReactionModule } from './reaction/reaction.module';
 import { PaginationMiddleware } from './shared/pagination/pagination.middleware';
+import { FileModule } from './file/file.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 @Module({
   imports: [
@@ -34,6 +37,18 @@ import { PaginationMiddleware } from './shared/pagination/pagination.middleware'
       envFilePath: process.env.NODE_ENV === 'development' ? '.dev.env' : '.env',
       isGlobal: true,
     }),
+    ServeStaticModule.forRootAsync({
+      useFactory: (configService: ConfigService) => {
+        const uploadFolder = configService.get<string>('UPLOAD_FOLDER');
+        return [
+          {
+            rootPath: join(__dirname, '..', '..', uploadFolder),
+            serveRoot: '/api/assets',
+          },
+        ];
+      },
+      inject: [ConfigService],
+    }),
 
     UserModule,
 
@@ -44,6 +59,8 @@ import { PaginationMiddleware } from './shared/pagination/pagination.middleware'
     ArticleModule,
 
     ReactionModule,
+
+    FileModule,
   ],
   controllers: [],
   providers: [],

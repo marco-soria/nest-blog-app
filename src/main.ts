@@ -14,7 +14,7 @@ async function bootstrap() {
     }),
   );
   app.useGlobalFilters(new GenericExceptionFilter());
-  useContainer(app.select(AppModule), { fallbackOnErrors: true });
+  useContainer(app.select(AppModule), { fallbackOnErrors: true }); //  this line provides the container to the class-validator library
   await app.listen(8080);
 }
 bootstrap();
