@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 import { BadRequestException, ValidationPipe } from '@nestjs/common';
 import { GenericExceptionFilter } from './shared';
 import { useContainer } from 'class-validator';
+import * as cookieParser from 'cookie-parser';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -14,6 +15,7 @@ async function bootstrap() {
     }),
   );
   app.useGlobalFilters(new GenericExceptionFilter());
+  app.use(cookieParser()); //  this line adds the cookie-parser middleware to the application
   useContainer(app.select(AppModule), { fallbackOnErrors: true }); //  this line provides the container to the class-validator library
   await app.listen(8080);
 }

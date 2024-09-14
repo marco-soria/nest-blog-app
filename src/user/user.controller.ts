@@ -8,11 +8,18 @@ import {
   Delete,
   HttpCode,
   HttpStatus,
+  Put,
+  UseGuards,
+  ForbiddenException,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUser } from './dto/create-user.dto';
 import { UpdateUser } from './dto/update-user.dto';
 import { GenericResponse } from '../shared/types';
+import { AuthGuard } from 'src/auth/auth.guard';
+import { CurrentUser } from 'src/auth/current-user.decorator';
+import { User } from './user.entity';
+import { UserDTO } from './dto/user-dto';
 
 @Controller('users')
 export class UserController {
@@ -25,23 +32,20 @@ export class UserController {
     return new GenericResponse('Please check your email');
   }
 
-  @Get()
-  findAll() {
-    return this.userService.findAll();
+  @Put(':id')
+  @UseGuards(AuthGuard)
+  async handleUpdate(
+    @Body() body: UpdateUser,
+    @CurrentUser() user: User,
+    @Param('id') id: string,
+  ): Promise<GenericResponse> {
+    if (user.id !== +id) throw new ForbiddenException('Unauthorized');
+    await this.userService.updateUser(user.id, body);
+    return new GenericResponse('User is updated');
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.userService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() body: UpdateUser) {
-    return this.userService.update(+id, body);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.userService.remove(+id);
+  @Get(':handle')
+  async getUser(@Param('handle') handle: string): Promise<UserDTO> {
+    return this.userService.getUser(handle);
   }
 }

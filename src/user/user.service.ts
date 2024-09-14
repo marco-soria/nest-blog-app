@@ -11,6 +11,7 @@ import { DataSource, FindOptionsWhere, Repository } from 'typeorm';
 import { User } from './user.entity';
 import { EmailService } from 'src/email/email.service';
 import { generateUniqueValue, Operation } from 'src/shared';
+import { UserDTO } from './dto/user-dto';
 
 @Injectable()
 export class UserService {
@@ -97,19 +98,18 @@ export class UserService {
     }
   }
 
-  findAll() {
-    return `This action returns all user`;
+  async updateUser(id: number, body: UpdateUser) {
+    const user = await this.userRepository.findOneBy({ id });
+    user.name = body.name;
+    user.image = body.image;
+    await this.userRepository.save(user);
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
-  }
-
-  update(id: number, body: UpdateUser) {
-    return `This action updates a #${id} user`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async getUser(handle: string): Promise<UserDTO> {
+    const user = await this.userRepository.findOneBy({ handle });
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+    return new UserDTO(user);
   }
 }
