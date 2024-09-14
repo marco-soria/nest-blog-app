@@ -3,16 +3,24 @@ import { UserModule } from './user/user.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './user/user.entity';
 import { EmailModule } from './email/email.module';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { DatabaseModuleOptions } from './config/database.configuration';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
-      type: 'sqlite',
-      database: './app-db.sqlite',
-      synchronize: false,
-      entities: [User],
-    }),
+    // TypeOrmModule.forRootAsync({
+    //   useFactory: (configService: ConfigService) => {
+    //     const dbHost = configService.get<string>('DB_HOST');
+    //     return {
+    //       type: 'sqlite',
+    //       database: dbHost,
+    //       synchronize: false,
+    //       entities: [User],
+    //     };
+    //   },
+    //   inject: [ConfigService],
+    // }),
+    TypeOrmModule.forRootAsync(DatabaseModuleOptions),
     ConfigModule.forRoot({
       envFilePath: process.env.NODE_ENV === 'development' ? '.dev.env' : '.env',
       isGlobal: true,
