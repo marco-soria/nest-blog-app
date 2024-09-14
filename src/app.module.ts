@@ -13,6 +13,7 @@ import { DatabaseModuleOptions } from './config/database.configuration';
 import { AuthModule } from './auth/auth.module';
 import { ArticleModule } from './article/article.module';
 import { ReactionModule } from './reaction/reaction.module';
+import { PaginationMiddleware } from './shared/pagination/pagination.middleware';
 
 @Module({
   imports: [
@@ -49,8 +50,8 @@ import { ReactionModule } from './reaction/reaction.module';
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer;
-    //.apply(PaginationMiddleware)
-    //.forRoutes({ path: '*', method: RequestMethod.GET });
+    consumer
+      .apply(PaginationMiddleware)
+      .forRoutes({ path: '*', method: RequestMethod.GET });
   }
 }
