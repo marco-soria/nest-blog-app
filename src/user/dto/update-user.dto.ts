@@ -1,4 +1,10 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { CreateUser } from './create-user.dto';
+import { IsNotEmpty, MaxLength, MinLength } from 'class-validator';
 
-export class UpdateUserDto extends PartialType(CreateUser) {}
+export class UpdateUser {
+  @IsNotEmpty({ message: 'Name cannot be empty' })
+  @MinLength(3)
+  @MaxLength(128)
+  name: string;
+
+  image: string;
+}

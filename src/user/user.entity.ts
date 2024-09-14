@@ -16,4 +16,10 @@ export class User {
 
   @Column({ nullable: true })
   image: string;
+
+  @Column({ nullable: true })
+  registrationToken: string;
+
+  @Column({ nullable: true })
+  loginToken: string;
 }

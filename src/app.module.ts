@@ -2,17 +2,20 @@ import { Module } from '@nestjs/common';
 import { UserModule } from './user/user.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './user/user.entity';
+import { EmailModule } from './email/email.module';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot({
       type: 'sqlite',
       database: './app-db.sqlite',
-      synchronize: true,
+      synchronize: false,
       entities: [User],
     }),
 
     UserModule,
+
+    EmailModule,
   ],
   controllers: [],
   providers: [],

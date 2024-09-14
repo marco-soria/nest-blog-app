@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUser } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { UpdateUser } from './dto/update-user.dto';
 import { GenericResponse } from '../shared/types';
 
 @Controller('users')
@@ -33,8 +33,8 @@ export class UserController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.update(+id, updateUserDto);
+  update(@Param('id') id: string, @Body() body: UpdateUser) {
+    return this.userService.update(+id, body);
   }
 
   @Delete(':id')
