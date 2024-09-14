@@ -6,6 +6,8 @@ import {
   Patch,
   Param,
   Delete,
+  HttpCode,
+  HttpStatus,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUser } from './dto/create-user.dto';
@@ -17,6 +19,7 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post()
+  @HttpCode(HttpStatus.OK)
   async create(@Body() body: CreateUser): Promise<GenericResponse> {
     await this.userService.createUser(body);
     return new GenericResponse('Please check your email');
